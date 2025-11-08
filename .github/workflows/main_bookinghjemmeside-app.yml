@@ -21,7 +21,7 @@ jobs:
           python-version: '3.11'
 
       - name: Go to backend folder and install dependencies
-        working-directory: backend
+        working-directory: bookinghjemmeside/backend
         run: |
           python -m venv antenv
           source antenv/bin/activate
@@ -32,7 +32,7 @@ jobs:
         with:
           name: python-app
           path: |
-            backend/
+            bookinghjemmeside/backend/
             !backend/antenv/
 
   deploy:
@@ -61,4 +61,5 @@ jobs:
           app-name: 'bookinghjemmeside-app'
           slot-name: 'Production'
           package: ./backend
+
 
