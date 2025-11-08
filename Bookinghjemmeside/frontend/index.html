@@ -1,42 +1,61 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html lang="da">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vaskerumsbooking</title>
-  <link rel="stylesheet" href="styles.css">
-  <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    .login, .calendar { max-width: 800px; margin: auto; }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
-    th { background-color: #f0f0f0; }
-    .booked { background-color: #ffcccc; }
-    .available { background-color: #ccffcc; cursor: pointer; }
-    button { padding: 5px 10px; margin: 5px; }
-  </style>
+    <title>Vaskerumsbooking</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <style>
+        /* Simpel flot stil til kalender og login */
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f8f9fa; }
+        header { text-align: center; margin-bottom: 30px; }
+        header h1 { margin: 0; }
+        .container { max-width: 900px; margin: auto; }
+        .calendar th, .calendar td { padding: 10px; text-align: center; }
+        .calendar { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .calendar th { background-color: #343a40; color: white; }
+        .calendar td { border: 1px solid #ccc; }
+        .available { background-color: #28a745; color: white; cursor: pointer; }
+        .booked { background-color: #dc3545; color: white; }
+        #loginForm { max-width: 400px; margin: 50px auto; text-align: center; }
+        #loginForm input { width: 80%; padding: 10px; margin: 5px 0; }
+        #loginForm button { padding: 10px 20px; margin-top: 10px; }
+        #bookingMsg { margin-top: 15px; font-weight: bold; }
+    </style>
 </head>
-<body>
-  <div class="login">
-    <h2>Login</h2>
-    <input type="text" id="username" placeholder="Brugernavn"><br>
-    <input type="password" id="password" placeholder="Kode"><br>
-    <button onclick="login()">Login</button>
-    <p id="loginMsg"></p>
-  </div>
+<body class="is-preload">
 
-  <div class="calendar" style="display:none;">
-    <h2>Vaskerumsbooking</h2>
-    <button onclick="changeWeek(-7)">Forrige uge</button>
-    <button onclick="changeWeek(7)">Næste uge</button>
-    <h3 id="weekLabel"></h3>
-    <table id="calendarTable">
-      <thead id="calendarHeader"></thead>
-      <tbody id="calendarBody"></tbody>
-    </table>
-    <p id="bookingMsg"></p>
-  </div>
+    <!-- Header -->
+    <header>
+        <h1>Vaskerumsbooking</h1>
+        <p>Book dit vaskerum nemt og hurtigt</p>
+    </header>
 
-  <script src="app.js"></script>
+    <!-- Login -->
+    <section id="loginSection">
+        <div id="loginForm">
+            <input type="text" id="username" placeholder="Brugernavn" /><br>
+            <input type="password" id="password" placeholder="Kode" /><br>
+            <button onclick="login()">Login</button>
+            <p id="loginMsg"></p>
+        </div>
+    </section>
+
+    <!-- Calendar Section -->
+    <section id="calendarSection" style="display:none;">
+        <div class="container">
+            <h2>Vaskerumsbooking</h2>
+            <button onclick="changeWeek(-7)">Forrige uge</button>
+            <button onclick="changeWeek(7)">Næste uge</button>
+            <h3 id="weekLabel"></h3>
+            <table class="calendar" id="calendarTable">
+                <thead id="calendarHeader"></thead>
+                <tbody id="calendarBody"></tbody>
+            </table>
+            <p id="bookingMsg"></p>
+        </div>
+    </section>
+
+    <script src="app.js"></script>
 </body>
 </html>
