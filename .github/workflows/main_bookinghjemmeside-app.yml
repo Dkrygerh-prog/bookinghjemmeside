@@ -1,4 +1,4 @@
-name: Build and deploy Python app to Azure Web App - bookinghjemmeside-app
+name: Deploy Bookinghjemmeside
 
 on:
   push:
@@ -7,60 +7,44 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
 
     steps:
-      - uses: actions/checkout@v4
+      # 1️⃣ Hent koden
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-      - name: Set up Python version
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
+      # 2️⃣ Tjek hvad der ligger i roden og backend
+      - name: List repo root
+        run: ls -R
 
-      - name: Go to backend folder and install dependencies
+      # 3️⃣ Installer Python dependencies (uden venv)
+      - name: Install backend dependencies
         working-directory: backend
-        run: |
-          python -m venv antenv
-          source antenv/bin/activate
-          pip install -r requirements.txt
+        run: pip install --upgrade pip
+      - name: Install requirements
+        working-directory: backend
+        run: pip install -r requirements.txt
 
-      - name: Upload artifact for deployment jobs
-        uses: actions/upload-artifact@v4
-        with:
-          name: python-app
-          path: |
-            backend/
-            !backend/antenv/
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    permissions:
-      id-token: write
-      contents: read
-
-    steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v4
-        with:
-          name: python-app
-      
-      - name: Login to Azure
+      # 4️⃣ Log ind på Azure
+      - name: Azure Login
         uses: azure/login@v2
         with:
           client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_B33656790FDA415D974E66B6365B0A52 }}
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_0027AF282913447EB4488F012E43D888 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_DDFED788B6A9458AADB7F4FFE02C3138 }}
 
-      - name: Deploy to Azure Web App
+      # 5️⃣ Deploy backend (Python)
+      - name: Deploy backend to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: 'bookinghjemmeside-app'
           slot-name: 'Production'
-          package: ./backend
+          package: backend
 
-
-
+      # 6️⃣ Deploy frontend (valgfrit, hvis du vil bruge samme App Service)
+      # Her kan du også bare kopiere frontend til backend/wwwroot hvis du bruger Flask/Function App
+      - name: Copy frontend to wwwroot
+        run: |
+          cp -r frontend/* backend/wwwroot/
