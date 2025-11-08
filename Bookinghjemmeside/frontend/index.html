@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vaskerumsbooking</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .login, .calendar { max-width: 800px; margin: auto; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+    th { background-color: #f0f0f0; }
+    .booked { background-color: #ffcccc; }
+    .available { background-color: #ccffcc; cursor: pointer; }
+    button { padding: 5px 10px; margin: 5px; }
+  </style>
+</head>
+<body>
+  <div class="login">
+    <h2>Login</h2>
+    <input type="text" id="username" placeholder="Brugernavn"><br>
+    <input type="password" id="password" placeholder="Kode"><br>
+    <button onclick="login()">Login</button>
+    <p id="loginMsg"></p>
+  </div>
+
+  <div class="calendar" style="display:none;">
+    <h2>Vaskerumsbooking</h2>
+    <button onclick="changeWeek(-7)">Forrige uge</button>
+    <button onclick="changeWeek(7)">Næste uge</button>
+    <h3 id="weekLabel"></h3>
+    <table id="calendarTable">
+      <thead id="calendarHeader"></thead>
+      <tbody id="calendarBody"></tbody>
+    </table>
+    <p id="bookingMsg"></p>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
