@@ -13,27 +13,27 @@ jobs:
       contents: read
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-      - name: Set up Python version
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Go to backend folder and install dependencies
-        working-directory: backend
+      - name: Install dependencies
+        working-directory: ./Bookinghjemmeside/backend
         run: |
           python -m venv antenv
           source antenv/bin/activate
+          pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Upload artifact for deployment jobs
+      - name: Upload artifact for deployment
         uses: actions/upload-artifact@v4
         with:
           name: python-app
-          path: |
-            backend/
-            !backend/antenv/
+          path: ./Bookinghjemmeside/backend
 
   deploy:
     runs-on: ubuntu-latest
@@ -43,11 +43,11 @@ jobs:
       contents: read
 
     steps:
-      - name: Download artifact from build job
+      - name: Download artifact
         uses: actions/download-artifact@v4
         with:
           name: python-app
-      
+
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -60,5 +60,4 @@ jobs:
         with:
           app-name: 'bookinghjemmeside-app'
           slot-name: 'Production'
-          package: backend
-
+          package: python-app
