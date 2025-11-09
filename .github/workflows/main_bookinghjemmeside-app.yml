@@ -7,14 +7,16 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
+      - name: Set up Python version
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -25,6 +27,32 @@ jobs:
           python -m venv antenv
           source antenv/bin/activate
           pip install -r requirements.txt
+
+      - name: Upload artifact for deployment jobs
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-app
+          path: |
+            backend/
+            !backend/antenv/
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: python-app
+
+      - name: Prepare deployment package
+        run: |
+          mkdir deploy-package
+          cp -r python-app/* deploy-package/
 
       - name: Login to Azure
         uses: azure/login@v2
@@ -38,4 +66,4 @@ jobs:
         with:
           app-name: 'bookinghjemmeside-app'
           slot-name: 'Production'
-          package: backend/
+          package: deploy-package/
